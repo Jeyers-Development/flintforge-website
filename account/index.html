@@ -3,22 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/styles.css">
-    <link rel="icon" type="image/png" href="/res/favicon.png">
+    
     <title>Jeyers Account</title>
+<style>
+        body {
+          background-color: #141414;
+          background-image: url('https://flintforge.pnc3.net/res/bkg.png');
+          background-repeat: repeat;
+          margin: 0;
+          font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: white;
+        }
+
+        h2 {
+            color: rgb(255, 214, 160);
+        }
+
+        h3 {
+            color: white;
+        }
+
+        p {
+            color: white;
+        }
+
+        button {
+          background-color: #966b42;
+          color: white;
+          padding: 10px 100px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 16px;
+          display: block;
+          margin: 0 auto;
+        }
+
+        button:hover {
+          background-color: #5c4127;
+        }
+
+        button:active {
+          background-color: #382819;
+        }
+    </style>
 </head>
 <body>
-    <div style="text-align: center; margin: 20px 0;">
-        <button onclick="location.href = '/index.html'" 
-                style="padding: 10px 28px; font-size: 16px; background: #966b42; color: white; border: none; border-radius: 4px; cursor: pointer;">
-            Back
-        </button>
-    </div>
 
     
 
     <div style="text-align: center; margin: 20px 0;">
-        <button onclick="downloadAndOpenHtml()" 
+        <button onclick="window.open('https://jd.pnc3.net/account/security', '_blank')" 
                 style="padding: 10px 100px; font-size: 16px; background: #966b42; color: white; border: none; border-radius: 4px; cursor: pointer;">
             Account Security - Open HTML
         </button>
