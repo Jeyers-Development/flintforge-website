@@ -31,7 +31,7 @@
 }
 
 .recommended:hover::after {
-  content: "Recommended By Developer";
+  content: "Recommended By Jeyers Development";
   position: absolute;
   top: -5px;
   left: 50%;
@@ -47,9 +47,16 @@
 }
 input { color: white; background: #000000; }
 select { color: white; background: #000000; }
+h3 { color: yellow; }
   </style>
 </head>
 <body>
+  <div style="text-align: center; margin: 20px 0;">
+        <button onclick="location.href = '../index.html'" 
+                style="padding: 10px 20px; font-size: 16px; background: #966b42; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Back
+        </button>
+    </div>
   <div style="text-align: center; margin: 20px 0;">
         <button onclick="location.href = '/uploader.html'" 
                 style="padding: 10px 20px; font-size: 16px; background: #966b42; color: white; border: none; border-radius: 4px; cursor: pointer;">
@@ -58,6 +65,7 @@ select { color: white; background: #000000; }
     </div>
 
   <h1>Flintforge Mod DB</h1>
+  <h3 id="os-instructions">loading device instructions...</h3>
 
   <div class="filters">
     <input type="text" id="searchInput" placeholder="Search mods...">
@@ -205,6 +213,22 @@ select { color: white; background: #000000; }
     document.getElementById('searchInput').addEventListener('input', applyFilters);
     document.getElementById('versionFilter').addEventListener('change', applyFilters);
     document.getElementById('sortFilter').addEventListener('change', applyFilters);
+
+    function getInstructions() {
+    const ua = navigator.userAgent.toLowerCase();
+    const plat = navigator.platform.toLowerCase();
+
+    if (ua.includes("win")) {
+      return "How to Install (Windows): Paste mod into mods folder (Default: '%appdata%\\Flintforge\\mods' )";
+    }
+    if (ua.includes("mac") || plat.includes("mac")) {
+      return "How to Install (macOS): no current build of Flintforge available for macOS... :(";
+    }
+    return "How to Install (Linux): Paste mod into the mods folder created on first game launch.";
+  }
+
+  document.getElementById("os-instructions").innerText = 
+    getInstructions();
 
     loadMods();
   </script>
