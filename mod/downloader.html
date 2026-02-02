@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/png" href="../res/favicon.png">
+  <title>Flintforge Mod Downloader</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .mod { margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+    button { margin-left: 0;
+    margin-right: auto;
+    display: block; 
+    margin-top: 5px; }
+    div { color: white; }
+    #searchInput, #versionFilter, #sortFilter {
+      width: 100%; padding: 8px; margin-bottom: 10px; font-size: 16px;
+    }
+    .filters { margin-bottom: 20px; }
+    .recommended {
+  position: relative;
+  display: inline;
+}
+
+.recommended::after {
+  content: "★";
+  color: gold;
+  margin-left: 4px;
+  font-size: 1.1em;
+}
+
+.recommended:hover::after {
+  content: "Recommended By Developer";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(+50%);
+  background: darkgray;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+}
+input { color: white; background: #000000; }
+select { color: white; background: #000000; }
+  </style>
+</head>
+<body>
+  <div style="text-align: center; margin: 20px 0;">
+        <button onclick="location.href = '/uploader.html'" 
+                style="padding: 10px 20px; font-size: 16px; background: #966b42; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Upload Your Own Mods
+        </button>
+    </div>
+
+  <h1>Flintforge Mod DB</h1>
+
+  <div class="filters">
+    <input type="text" id="searchInput" placeholder="Search mods...">
+    <select id="versionFilter">
+      <option value="">All Versions</option>
+    </select>
+    <select id="sortFilter">
+      <option value="default">Default</option>
+      <option value="downloads-desc">Most Downloaded</option>
+      <option value="downloads-asc">Least Downloaded</option>
+    </select>
+  </div>
+
+  <div id="modsList">Loading mods...</div>
+
+  <script>
+    const METADATA_URL = 'https://pub-44c5b0ce21ec488ba34d865660315ce0.r2.dev/mods_metadata.json';
+    const DOWNLOAD_BASE = 'https://mod-uploader-worker.jakejem2010.workers.dev?action=download&name=';
+    let ALL_MODS = {};
+    let ALL_VERSIONS = new Set();
+
+    async function loadMods() {
+      const modsDiv = document.getElementById('modsList');
+      modsDiv.textContent = 'Loading mods...';
+      try {
+        const res = await fetch(METADATA_URL + '?t=' + Date.now());
+        if (!res.ok) throw new Error('Failed to fetch metadata');
+        ALL_MODS = await res.json();
+
+        // Collect versions
+        Object.values(ALL_MODS).forEach(mod => {
+          if (mod.gameversions) {
+            mod.gameversions.split(/[,; ]+/).forEach(v => ALL_VERSIONS.add(v.trim()));
+          }
+        });
+
+        populateVersionFilter();
+        applyFilters();
+      } catch (err) {
+        modsDiv.textContent = 'Error: ' + err.message;
+      }
+    }
+
+    function populateVersionFilter() {
+      const select = document.getElementById('versionFilter');
+      [...ALL_VERSIONS].sort().forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        select.appendChild(opt);
+      });
+    }
+
+    function getFilteredAndSortedMods() {
+      let mods = { ...ALL_MODS };
+
+      // Search
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (query) {
+        const filtered = {};
+        for (const hash in mods) {
+          const mod = mods[hash];
+          const haystack = [
+            mod.title || '', mod.originalName || '', mod.username || '',
+            mod.authors || '', mod.description || ''
+          ].join(' ').toLowerCase();
+          if (haystack.includes(query)) filtered[hash] = mod;
+        }
+        mods = filtered;
+      }
+
+      // Version filter
+      const version = document.getElementById('versionFilter').value;
+      if (version) {
+        const filtered = {};
+        for (const hash in mods) {
+          const v = mods[hash].gameversions || '';
+          if (v.includes(version)) filtered[hash] = mods[hash];
+        }
+        mods = filtered;
+      }
+
+      // Sort
+      const sort = document.getElementById('sortFilter').value;
+      const entries = Object.entries(mods);
+      if (sort === 'downloads-desc') {
+        entries.sort((a,b) => (b[1].downloads || 0) - (a[1].downloads || 0));
+      } else if (sort === 'downloads-asc') {
+        entries.sort((a,b) => (a[1].downloads || 0) - (b[1].downloads || 0));
+      }
+
+      return Object.fromEntries(entries);
+    }
+
+    function renderMods(mods) {
+      const modsDiv = document.getElementById('modsList');
+      modsDiv.textContent = '';
+      const keys = Object.keys(mods);
+      if (!keys.length) {
+        modsDiv.textContent = 'No mods found.';
+        return;
+      }
+      for (const hash of keys) {
+        modsDiv.appendChild(createModElement(mods[hash]));
+      }
+    }
+
+    const recommended_MODS = new Set([
+      "blueprint_mod.jop",
+      "insane_multitool_mod.jop"
+    ]);
+
+    function createModElement(mod) {
+      const filename = mod.originalName || 'unknown.jop';
+      const title = mod.title || filename;
+      const isrecommended = recommended_MODS.has(filename);
+
+      const div = document.createElement('div');
+      div.className = 'mod';
+      div.innerHTML = `
+        <div>
+          <h2>
+            <span class="${isrecommended ? 'recommended' : ''}"><strong>${title}</strong></span>
+          </h2>
+        </div>
+        <div><strong>Game Versions:</strong> ${mod.gameversions || 'Unspecified Versions'}</div>
+        <div><strong>Downloads:</strong> ${mod.downloads || 0}</div>
+        <div>Created By: ${mod.authors || mod.username || 'Unknown'}</div>
+        <div>Uploaded By: ${mod.username || 'Unknown/Lost'}</div>
+        <div>${mod.description || 'No description...'}</div>
+      `;
+
+      const btn = document.createElement('button');
+      btn.textContent = 'Download Mod';
+      btn.onclick = () => window.location.href = DOWNLOAD_BASE + encodeURIComponent(filename);
+      div.appendChild(btn);
+
+      return div;
+    }
+
+    function applyFilters() {
+      renderMods(getFilteredAndSortedMods());
+    }
+
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('versionFilter').addEventListener('change', applyFilters);
+    document.getElementById('sortFilter').addEventListener('change', applyFilters);
+
+    loadMods();
+  </script>
+</body>
+</html>
