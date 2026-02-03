@@ -12,12 +12,9 @@
   label { display: block; margin-bottom: 10px; }
   textarea { background: #000000; color: white; }
   pre { background: #000000; color: white; padding: 10px; overflow-x: auto; white-space: pre-wrap; }
-  button { margin-left: 0;
-    margin-right: auto;
-    display: block; 
-    margin-top: 5px; }
+  button { margin-left: 0; margin-right: auto; display: block; margin-top: 5px; }
   div { color: white; }
-  input { color: white; background: #000000; }
+  input, select { color: white; background: #000000; }
 </style>
 </head>
 <body>
@@ -42,16 +39,26 @@
   <pre id="registerCurl">---</pre>
 </div>
 
-
 <!-- Step 2: Mod Details -->
 <div class="step" id="step2">
   <h2>Step 2: Mod Details</h2>
 
-  <label>Mod File Path: <input type="text" id="filepath" placeholder="Paste full path here" required></label>
-  <label>Title: <input type="text" id="title" required></label>
-  <label>Description: <textarea id="description" required></textarea></label>
-  <label>Authors: <input type="text" id="authors" required></label>
-  <label>Game Versions: <input type="text" id="gameversions" required></label>
+  <label>Action:
+    <select id="action">
+      <option value="upload">Upload</option>
+      <option value="update">Update</option>
+      <option value="delete">Delete</option>
+    </select>
+  </label>
+
+  <label>Mod File Path (ex: C:/path/example_mod.jop): <input type="text" id="filepath" placeholder="Paste full path here"></label>
+
+  <label>Permanent Name (same as 'permanent' file in mod archive): <input type="text" id="permanentName" placeholder="example_mod" required></label>
+
+  <label>Title: <input type="text" id="title"></label>
+  <label>Description: <textarea id="description"></textarea></label>
+  <label>Authors: <input type="text" id="authors"></label>
+  <label>Game Versions: <input type="text" id="gameversions"></label>
 </div>
 
 <h2>Auto-generated curl command (CMD-ready, --data-binary):</h2>
@@ -62,7 +69,7 @@ const step1 = document.getElementById('step1');
 const step2 = document.getElementById('step2');
 const nextToStep2Btn = document.getElementById('nextToStep2');
 const registerBtn = document.getElementById('registerBtn');
-const registerResult = document.getElementById('registerResult');
+const registerCurl = document.getElementById('registerCurl');
 const curlOutput = document.getElementById('curlOutput');
 
 let userkey = "";
@@ -70,12 +77,6 @@ let userkey = "";
 // Escape quotes for CMD
 function escapeCmd(str) {
   return str.replace(/(["^])/g,'^$1');
-}
-
-// Get file name without path or extension
-function getFileName(filePath) {
-  const parts = filePath.replace(/\\/g,'/').split('/');
-  return parts[parts.length - 1]; // keep full filename, including .jop
 }
 
 // Update curl command
@@ -86,26 +87,34 @@ function updateCurl() {
   const authors = document.getElementById('authors').value.trim();
   const gameversions = document.getElementById('gameversions').value.trim();
   const filepath = document.getElementById('filepath').value.trim();
+  const permanentName = document.getElementById('permanentName').value.trim() + ".jop";
+  const action = document.getElementById('action').value;
 
-  if (!username || !userkey || !title || !description || !authors || !gameversions || !filepath) {
+  if (!username || !userkey || !permanentName || !action) {
     curlOutput.textContent = "---";
     return;
   }
 
-  const modName = getFileName(filepath);
-
-  // Encode all fields for URL parameters
   const params = new URLSearchParams({
+    action: action,
     username: username,
     userkey: userkey,
-    name: modName,
-    title: title,
-    description: description,
-    authors: authors,
-    gameversions: gameversions
+    name: permanentName
   });
 
-  const curlCmd = `curl -X POST "https://mod-uploader-worker.jakejem2010.workers.dev?action=upload&${params.toString()}" --data-binary "@${filepath}"`;
+  if (action === "upload" || action === "update") {
+    params.set("title", title);
+    params.set("description", description);
+    params.set("authors", authors);
+    params.set("gameversions", gameversions);
+  }
+
+  let curlCmd = "";
+  if (action === "delete") {
+    curlCmd = `curl -X DELETE "https://mod-uploader-worker.jakejem2010.workers.dev?${params.toString()}"`;
+  } else {
+    curlCmd = `curl -X POST "https://mod-uploader-worker.jakejem2010.workers.dev?${params.toString()}" --data-binary "@${filepath}"`;
+  }
 
   curlOutput.textContent = curlCmd;
 }
@@ -121,8 +130,7 @@ nextToStep2Btn.addEventListener('click', () => {
   updateCurl();
 });
 
-const registerCurl = document.getElementById('registerCurl');
-
+// Register button
 registerBtn.addEventListener('click', () => {
   const username = document.getElementById('username').value.trim();
   if(!username) { alert("Enter username."); return; }
@@ -134,9 +142,8 @@ registerBtn.addEventListener('click', () => {
   alert("Copy this CMD curl to register your user. After registration, paste the returned userKey into the User Key field.");
 });
 
-
 // Update curl whenever any field changes
-['title','description','authors','gameversions','filepath'].forEach(id => {
+['title','description','authors','gameversions','filepath','permanentName','action'].forEach(id => {
   document.getElementById(id).addEventListener('input', updateCurl);
 });
 </script>
