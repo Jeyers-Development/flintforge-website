@@ -117,9 +117,9 @@ function updateCurl() {
 
   let curlCmd = "";
   if (action === "delete") {
-    curlCmd = `curl -X DELETE "https://mod-uploader-worker.jakejem2010.workers.dev?${params.toString()}"`;
+    curlCmd = `curl.exe -X DELETE "https://mod-uploader-worker.jakejem2010.workers.dev?${params.toString()}"`;
   } else {
-    curlCmd = `curl -X POST "https://mod-uploader-worker.jakejem2010.workers.dev?${params.toString()}" --data-binary "@${filepath}"`;
+    curlCmd = `curl.exe -X POST "https://mod-uploader-worker.jakejem2010.workers.dev?${params.toString()}" --data-binary "@${filepath}"`;
   }
 
   curlOutput.textContent = curlCmd;
