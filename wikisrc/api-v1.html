@@ -1,74 +1,248 @@
-<h1 id="flintforge-modding-api-v1-documentation">Flintforge Modding API v1 Documentation</h1>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flintforge Modding API v1 Documentation</title>
+
+  <!-- GitHub Markdown CSS -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/sindresorhus/github-markdown-css/github-markdown.css">
+
+  <style>
+    :root {
+      --bg: #0d1117;
+      --fg: #c9d1d9;
+      --muted: #8b949e;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --code-bg: #161b22;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    /* Layout */
+    .stackedit__left {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 280px;
+      overflow-y: auto;
+      background: #010409;
+      border-right: 1px solid var(--border);
+      padding: 20px;
+    }
+    .stackedit__right {
+      margin-left: 280px;
+    }
+    
+	/* TOC styling */
+	.stackedit__toc a {
+	  color: var(--fg);
+	  text-decoration: none;
+	  display: block;
+	  padding: 4px 6px;       /* slightly bigger padding */
+	  border-radius: 4px;
+	  margin-bottom: 4px;     /* GAP between TOC items */
+	}
+	
+	.stackedit__toc li:not(.toc-h3) a {
+	  font-weight: 600;
+	  font-size: 14px;
+	}
+	
+	.stackedit__toc .toc-h3 a {
+	  color: var(--muted);
+	  font-weight: 400;
+	  font-size: 13px;
+	  padding-left: 16px;
+	  border-left: 1px solid var(--border);
+	}
+	
+	/* Hover effect */
+	.stackedit__toc a:hover {
+	  color: var(--accent);
+	  background: rgba(88,166,255,0.15);
+	}
+	
+	/* Recently clicked/active entry */
+	.stackedit__toc a.active {
+	  color: var(--accent);
+	  background: rgba(88,166,255,0.2);
+	}
+
+    /* Markdown body */
+    .markdown-body {
+      box-sizing: border-box;
+      min-width: 200px;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 45px;
+      background: var(--bg);
+      color: var(--fg);
+    }
+    .markdown-body pre,
+    .markdown-body code {
+      background: var(--code-bg);
+    }
+    .markdown-body a { color: var(--accent); }
+    .markdown-body hr { border-color: var(--border); }
+    .markdown-body table th,
+    .markdown-body table td { border-color: var(--border); }
+
+    @media (max-width: 900px) {
+      .stackedit__left {
+        position: relative;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .stackedit__right { margin-left: 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="#flintforge-modding-api-v1-documentation">Flintforge Modding API v1 Documentation</a></li>
+<li><a href="#mod-creation-instructions">Mod Creation Instructions</a>
+<ul>
+<li><a href="#step-1-workspace-setup">Step 1: Workspace Setup</a></li>
+<li><a href="#step-2-mod-declaration-files">Step 2: Mod Declaration Files</a></li>
+<li><a href="#step-3-add-content">Step 3: Add content</a>
+<ul>
+<li><a href="#adding-items">Adding Items</a></li>
+<li><a href="#adding-recipes">Adding Recipes</a></li>
+</ul>
+</li>
+<li><a href="#step-4-build-mod">Step 4: Build Mod</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+  </div>
+
+  <div class="stackedit__right">
+    <div class="stackedit__html markdown-body">
+      <h1 id="flintforge-modding-api-v1-documentation">Flintforge Modding API v1 Documentation</h1>
+<h1 id="mod-creation-instructions">Mod Creation Instructions</h1>
 <h2 id="step-1-workspace-setup">Step 1: Workspace Setup</h2>
 <p>Replace your_mod_name with whatever you want to call your mod with no uppercase, and no spaces.</p>
 <p><img src="https://github.com/Jeyers-Development/flintforge-website/blob/main/wikisrc/setup.gif?raw=true" alt=""></p>
 <h2 id="step-2-mod-declaration-files">Step 2: Mod Declaration Files</h2>
-<p>The mod declaration files are the _&#39;title&#39;, &#39;authors&#39;, &#39;permanent&#39;, <em>and</em> &#39;version&#39;_ files. Without these, your mod will not import.</p>
+<p>The mod declaration files are the <em>‘title’, ‘authors’, ‘permanent’, and ‘version’</em> files. Without these, your mod will not import.</p>
 <ol>
-<li>Edit the <em>&#39;permanent&#39;</em> file: this files contents will be along the lines of _&#39;example_mod&#39; or &#39;jacobs_recipe<em>mod&#39; (just make it the same as the workspace dir name, that just makes things easier)</em>, NO SPACES, NO CAPITALS. DO NOT CHANGE THIS AFTER PUBLISHING. Saves may corrupt for players if you change <em>permanent</em>&#39;s contents after they first install it and then update it. The file name implies that it is permanent.</li>
-<li>Edit the <em>&#39;version&#39;</em> file: for this API version set the contents to exactly (don&#39;t include the quotes) &quot;InDevp_mod&quot;</li>
-<li>Edit the <em>&#39;title&#39;</em> file: set the contents to whatever you want the mod&#39;s name to be when it says it is imported, (ex. <em>&#39;Example Mod&#39;, &#39;Jacobs Recipe Mod&#39;</em>)</li>
-<li>Edit the <em>&#39;authors&#39;</em> file: set this files contents to whoever needs credit to this project. If you set this to &quot;John Doe, Jace Marie, and James Kanes&quot; on import it will say &quot;Mod Imported: Example Mod (example_mod) - By John Doe, Jace Marie, and James Kanes&quot;</li>
+<li>Edit the <em>‘permanent’</em> file: this files contents will be along the lines of <em>‘example_mod’ or ‘jacobs_recipe_mod’ (just make it the same as the workspace dir name, that just makes things easier)</em>, NO SPACES, NO CAPITALS. DO NOT CHANGE THIS AFTER PUBLISHING. Saves may corrupt for players if you change <em>permanent</em>’s contents after they first install it and then update it. The file name implies that it is permanent.</li>
+<li>Edit the <em>‘version’</em> file: for this API version set the contents to exactly (don’t include the quotes) “InDevp_mod”</li>
+<li>Edit the <em>‘title’</em> file: set the contents to whatever you want the mod’s name to be when it says it is imported, (ex. <em>‘Example Mod’, ‘Jacobs Recipe Mod’</em>)</li>
+<li>Edit the <em>‘authors’</em> file: set this files contents to whoever needs credit to this project. If you set this to “John Doe, Jace Marie, and James Kanes” on import it will say “Mod Imported: Example Mod (example_mod) - By John Doe, Jace Marie, and James Kanes”</li>
 </ol>
 <h2 id="step-3-add-content">Step 3: Add content</h2>
-<p>As of now you can add <strong><em>items</em></strong> and <strong><em>recipes</em></strong>. The rest of this document will be dedicated to that.</p>
-<h3 id="adding-items-">Adding Items:</h3>
+<p>As of now you can add <em><strong>items</strong></em> and <em><strong>recipes</strong></em>. The rest of this document will be dedicated to that.</p>
+<h3 id="adding-items">Adding Items</h3>
 <ol>
-<li>Under the <strong><em>&#39;data&#39;</em></strong> directory from earlier create another folder called <strong><em>&#39;item&#39;.</em></strong></li>
-<li>For each item create a <item_name>.json file, replacing <item_name> with your items name with no uppercase, and no spaces.</li>
+<li>Under the <em><strong>‘data’</strong></em> directory from earlier create another folder called <em><strong>‘item’.</strong></em></li>
+<li>For each item create a &lt;item_name&gt;.json file, replacing &lt;item_name&gt; with your items name with no uppercase, and no spaces.</li>
 <li>Edit the item file. (heres an example from the Insane Multitool Mod) REMOVE ALL COMMENTS FROM THIS IF YOU COPY IT AND CHANGE NAMES!</li>
 </ol>
-<pre><code class="lang-json">{
-    <span class="hljs-string">"modItemId"</span>: <span class="hljs-number">0</span>, //MAKE EACH ITEM HAVE A UNIQUE modItemID, MAKE IT INCREMENTAL!!! (<span class="hljs-keyword">next</span> item would <span class="hljs-keyword">be</span> <span class="hljs-number">1</span>, after that <span class="hljs-number">2</span>, <span class="hljs-built_in">and</span> <span class="hljs-keyword">so</span> forth)
+<pre class=" language-json"><code class="prism  language-json"><span class="token punctuation">{</span>
+    <span class="token string">"modItemId"</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment">//MAKE EACH ITEM HAVE A UNIQUE modItemID, MAKE IT INCREMENTAL!!! (next item would be 1, after that 2, and so forth)</span>
 
-    <span class="hljs-string">"filename"</span>: <span class="hljs-string">"insane_multitool"</span>, //<span class="hljs-keyword">make</span> this the same <span class="hljs-keyword">as</span> the item json <span class="hljs-keyword">file</span> without the .json <span class="hljs-keyword">file</span> extension
-    <span class="hljs-string">"name"</span>: <span class="hljs-string">"Insane Multitool"</span>, //<span class="hljs-keyword">change</span> this <span class="hljs-keyword">to</span> whatever you want the item <span class="hljs-keyword">to</span> <span class="hljs-keyword">be</span> named <span class="hljs-keyword">as</span> in-game, spaces <span class="hljs-built_in">and</span> capitals allowed
-    <span class="hljs-string">"itemCanPlace"</span>: false,
-    <span class="hljs-string">"itemSoundPlace"</span>: <span class="hljs-string">"null"</span>, //<span class="hljs-keyword">if</span> the itemCanPlace value <span class="hljs-keyword">is</span> true (<span class="hljs-keyword">if</span> not leave <span class="hljs-keyword">as</span> <span class="hljs-string">"null"</span>)<span class="hljs-keyword">set</span> it <span class="hljs-keyword">to</span> any of the built-in game sounds (custom audio coming soon)...
-                              //available value<span class="hljs-variable">s:</span>
-                              // brick, crunch, fire_sound_1, generic_place (default), <span class="hljs-keyword">pop</span>, shale-ish_break, stone_craft, wood_break
-    <span class="hljs-string">"use"</span>: {
-        <span class="hljs-string">"type"</span>: <span class="hljs-string">"tool_universal"</span>, //here <span class="hljs-keyword">is</span> where you declare use
-                                  // CRAFTING ONLY: <span class="hljs-string">"type"</span>: <span class="hljs-string">"other"</span>
-                                  // ALL TOOLS: tool_shovel, tool_hammer, tool_knife, tool_pickaxe, tool_axe, tool_sword (not implemented yet)
-                                  // PLACE BLOCKS: <span class="hljs-string">"type"</span>: <span class="hljs-string">"block"</span>
-                                  // SPAWN ENTITY: <span class="hljs-string">"type"</span>: <span class="hljs-string">"entity"</span>
-        <span class="hljs-string">"value"</span>: <span class="hljs-string">"99:99"</span> // here <span class="hljs-keyword">is</span> where you declare the use value
-                                  // CRAFTING ONLY: <span class="hljs-string">"value"</span>: <span class="hljs-string">"crafting"</span>
-                                  // ALL TOOLS: <span class="hljs-string">"value"</span>: <span class="hljs-string">"&lt;tool tier&gt;:&lt;tool speed multiplier&gt;"</span>
-                                  // PLACE BLOCKS: <span class="hljs-string">"value"</span>: <span class="hljs-string">"game:&lt;block_you_want_to_place&gt;"</span>
-                                  // SPAWN ENTITY: <span class="hljs-string">"value"</span>: <span class="hljs-string">"game:&lt;entity_you_want_to_spawn&gt;"</span>
-    },
+    <span class="token string">"filename"</span><span class="token punctuation">:</span> <span class="token string">"insane_multitool"</span><span class="token punctuation">,</span> <span class="token comment">//make this the same as the item json file without the .json file extension</span>
+    <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"Insane Multitool"</span><span class="token punctuation">,</span> <span class="token comment">//change this to whatever you want the item to be named as in-game, spaces and capitals allowed</span>
+    <span class="token string">"itemCanPlace"</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    <span class="token string">"itemSoundPlace"</span><span class="token punctuation">:</span> <span class="token string">"null"</span><span class="token punctuation">,</span> <span class="token comment">//if the itemCanPlace value is true (if not leave as "null")set it to any of the built-in game sounds (custom audio coming soon)...</span>
+                              <span class="token comment">//available values:</span>
+                              <span class="token comment">// brick, crunch, fire_sound_1, generic_place (default), pop, shale-ish_break, stone_craft, wood_break</span>
+    <span class="token string">"use"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        <span class="token string">"type"</span><span class="token punctuation">:</span> <span class="token string">"tool_universal"</span><span class="token punctuation">,</span> <span class="token comment">//here is where you declare use</span>
+                                  <span class="token comment">// CRAFTING ONLY: "type": "other"</span>
+                                  <span class="token comment">// ALL TOOLS: tool_shovel, tool_hammer, tool_knife, tool_pickaxe, tool_axe, tool_sword (not implemented yet)</span>
+                                  <span class="token comment">// PLACE BLOCKS: "type": "block"</span>
+                                  <span class="token comment">// SPAWN ENTITY: "type": "entity"</span>
+        <span class="token string">"value"</span><span class="token punctuation">:</span> <span class="token string">"99:99"</span> <span class="token comment">// here is where you declare the use value</span>
+                                  <span class="token comment">// CRAFTING ONLY: "value": "crafting"</span>
+                                  <span class="token comment">// ALL TOOLS: "value": "&lt;tool tier&gt;:&lt;tool speed multiplier&gt;"</span>
+                                  <span class="token comment">// PLACE BLOCKS: "value": "game:&lt;block_you_want_to_place&gt;"</span>
+                                  <span class="token comment">// SPAWN ENTITY: "value": "game:&lt;entity_you_want_to_spawn&gt;"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
 
-    // NOW ONTO THE OPTIONAL VALUES
-    <span class="hljs-string">"textureBaseFolder"</span>: <span class="hljs-string">"mods/insane_multitool_mod/texture/"</span>, //<span class="hljs-keyword">change</span> this <span class="hljs-keyword">if</span> you want textures in <span class="hljs-keyword">a</span> different base folder (<span class="hljs-keyword">ex</span>. <span class="hljs-string">"mods/insane_multitool_mod/images/"</span>)
-    <span class="hljs-string">"textureExtensionFolder"</span>: <span class="hljs-string">"items"</span> //<span class="hljs-keyword">change</span> this <span class="hljs-keyword">if</span> you want textures in <span class="hljs-keyword">a</span> different folder extension than <span class="hljs-string">'item'</span> (<span class="hljs-keyword">ex</span>. <span class="hljs-string">"cool_added_item"</span>)
-}
+    <span class="token comment">// NOW ONTO THE OPTIONAL VALUES</span>
+    <span class="token string">"textureBaseFolder"</span><span class="token punctuation">:</span> <span class="token string">"mods/insane_multitool_mod/texture/"</span><span class="token punctuation">,</span> <span class="token comment">//change this if you want textures in a different base folder (ex. "mods/insane_multitool_mod/images/")</span>
+    <span class="token string">"textureExtensionFolder"</span><span class="token punctuation">:</span> <span class="token string">"items"</span> <span class="token comment">//change this if you want textures in a different folder extension than 'item' (ex. "cool_added_item")</span>
+<span class="token punctuation">}</span>
 </code></pre>
-<h3 id="adding-recipes-">Adding Recipes:</h3>
+<h3 id="adding-recipes">Adding Recipes</h3>
 <ol>
-<li>Under the <strong><em>&#39;data&#39;</em></strong> directory from earlier create another folder called <strong><em>&#39;recipe&#39;.</em></strong></li>
-<li>For each item create a <recipe_name>.json file, replacing <recipe_name> with your recipe name (can be anything) with no uppercase, and no spaces.</li>
+<li>Under the <em><strong>‘data’</strong></em> directory from earlier create another folder called <em><strong>‘recipe’.</strong></em></li>
+<li>For each item create a &lt;recipe_name&gt;.json file, replacing &lt;recipe_name&gt; with your recipe name (can be anything) with no uppercase, and no spaces.</li>
 <li>Edit the recipe file. (heres a <strong>modified json</strong> example from the base Flintforge Game) REMOVE ALL COMMENTS FROM THIS IF YOU COPY IT AND CHANGE NAMES!</li>
 </ol>
-<pre><code class="lang-json">{
-    <span class="hljs-string">"required"</span>: [ <span class="hljs-comment">// EACH STRING IN THIS ARRAY WILL CORRESPOND TO AN ITEM</span>
-        <span class="hljs-string">"game:raw_mold-anvil"</span>, 
-        <span class="hljs-string">"game:coal"</span>,
-        <span class="hljs-string">"&lt;your_cool_mod&gt;:&lt;required_item&gt;"</span> <span class="hljs-comment">// replace &lt;your_cool_mod&gt; with your mod's 'permanent' id from earlier.</span>
-                                          <span class="hljs-comment">// replace &lt;required_item&gt; with the "filename" of the item's json file from earlier</span>
-    ],
-    <span class="hljs-string">"required_amount"</span>: [ <span class="hljs-comment">// EACH INT IN THIS ARRAY WILL CORRESPOND THE AMOUNT YOU NEED OF THE ITEM, IN THE SAME ORDER AS THE "required" array</span>
-        <span class="hljs-number">1</span>,
-        <span class="hljs-number">4</span>,
-        -<span class="hljs-number">1</span>  <span class="hljs-comment">// negatives are equivalent to saying "at least" so you need at least one &lt;required_item&gt; but it will not take it away when crafted.</span>
-    ],
-    <span class="hljs-string">"output"</span>: <span class="hljs-string">"game:fired_mold-anvil"</span>, <span class="hljs-comment">// the output of the recipe when crafted... modded item would use the same format as &lt;your_cool_mod&gt;:&lt;required_item&gt;</span>
+<pre class=" language-json"><code class="prism  language-json"><span class="token punctuation">{</span>
+    <span class="token string">"required"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token comment">// EACH STRING IN THIS ARRAY WILL CORRESPOND TO AN ITEM</span>
+        <span class="token string">"game:raw_mold-anvil"</span><span class="token punctuation">,</span> 
+        <span class="token string">"game:coal"</span><span class="token punctuation">,</span>
+        <span class="token string">"&lt;your_cool_mod&gt;:&lt;required_item&gt;"</span> <span class="token comment">// replace &lt;your_cool_mod&gt; with your mod's 'permanent' id from earlier.</span>
+                                          <span class="token comment">// replace &lt;required_item&gt; with the "filename" of the item's json file from earlier</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string">"required_amount"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token comment">// EACH INT IN THIS ARRAY WILL CORRESPOND THE AMOUNT YOU NEED OF THE ITEM, IN THE SAME ORDER AS THE "required" array</span>
+        <span class="token number">1</span><span class="token punctuation">,</span>
+        <span class="token number">4</span><span class="token punctuation">,</span>
+        <span class="token operator">-</span><span class="token number">1</span>  <span class="token comment">// negatives are equivalent to saying "at least" so you need at least one &lt;required_item&gt; but it will not take it away when crafted.</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string">"output"</span><span class="token punctuation">:</span> <span class="token string">"game:fired_mold-anvil"</span><span class="token punctuation">,</span> <span class="token comment">// the output of the recipe when crafted... modded item would use the same format as &lt;your_cool_mod&gt;:&lt;required_item&gt;</span>
 
-    <span class="hljs-comment">// NOW ONTO THE OPTIONAL VALUES</span>
-    <span class="hljs-string">"stations"</span>: [ <span class="hljs-comment">// if the player is close enough to one of these BLOCKS in this array then it will let you craft it. if you aren't you cant. ex. game:dirt</span>
-        <span class="hljs-string">"game:brick_forge_basic"</span>,
-    ],
-    <span class="hljs-string">"required_event"</span>: <span class="hljs-string">"christmas"</span>  <span class="hljs-comment">// this is a required seasonal event that the player has to be in to craft. (only christmas is available right now [<span class="hljs-doctag">NOTE:</span> INDEVP-9 DISABLES ALL SEASONAL EVENTS DUE TO TEXTURE CONFLICTS AND RETURNS IN LATER VERSIONS])</span>
-}
+    <span class="token comment">// NOW ONTO THE OPTIONAL VALUES</span>
+    <span class="token string">"stations"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token comment">// if the player is close enough to one of these BLOCKS in this array then it will let you craft it. if you aren't you cant. ex. game:dirt</span>
+        <span class="token string">"game:brick_forge_basic"</span><span class="token punctuation">,</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string">"required_event"</span><span class="token punctuation">:</span> <span class="token string">"christmas"</span>  <span class="token comment">// this is a required seasonal event that the player has to be in to craft. (only christmas is available right now [NOTE: INDEVP-9 DISABLES ALL SEASONAL EVENTS DUE TO TEXTURE CONFLICTS AND RETURNS IN LATER VERSIONS])</span>
+<span class="token punctuation">}</span>
 </code></pre>
+<h2 id="step-4-build-mod">Step 4: Build Mod</h2>
+<p>Under the base workspace directory create a file with the name <em><strong>’<a href="http://build.py">build.py</a>’</strong></em></p>
+
+    </div>
+  </div>
+
+  <!-- JS: Smooth scroll and click highlighting only -->
+<script>
+const tocLinks = document.querySelectorAll('.stackedit__toc a');
+
+// Smooth scroll on click with offset and highlight clicked item
+tocLinks.forEach(a => {
+  const href = a.getAttribute('href');
+  if (href?.startsWith('#')) {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      
+      // Remove active from all links
+      tocLinks.forEach(link => link.classList.remove('active'));
+      
+      // Add active to clicked link
+      a.classList.add('active');
+      
+      // Scroll to target
+      const id = href.slice(1);
+      const target = document.getElementById(id);
+      if (target) {
+        const y = target.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>
