@@ -142,7 +142,7 @@ registerBtn.addEventListener('click', () => {
   if(!username) { alert("Enter username."); return; }
 
   // Generate curl for registration
-  const curlCmd = `curl -X POST "https://mod-uploader-worker.jakejem2010.workers.dev?action=register&username=${encodeURIComponent(username)}"`;
+  const curlCmd = `curl.exe -X POST "https://mod-uploader-worker.jakejem2010.workers.dev?action=register&username=${encodeURIComponent(username)}"`;
   registerCurl.textContent = curlCmd;
 
   alert("Copy this CMD curl to register your user. After registration, paste the returned userKey into the User Key field.");
