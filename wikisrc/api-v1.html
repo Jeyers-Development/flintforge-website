@@ -1,10 +1,10 @@
-
+﻿
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flintforge Modding API v1 Documentation</title>
+  <title>api-v1</title>
 
   <!-- GitHub Markdown CSS -->
   <link rel="stylesheet"
@@ -125,9 +125,17 @@
 <li><a href="#adding-recipes">Adding Recipes</a></li>
 </ul>
 </li>
-<li><a href="#step-4-build-mod">Step 4: Build Mod</a></li>
+<li><a href="#step-4-build-mod">Step 4: Build Mod</a>
+<ul>
+<li><a href="#python-build-file-recommended">Python Build File (recommended)</a></li>
+<li><a href="#manual-build-7zip">Manual Build (7zip)</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#mod-publishing">Mod Publishing</a></li>
+<li><a href="#support-flintforge">Support Flintforge</a></li>
+<li><a href="#help">Help?</a></li>
 </ul>
 
     </div>
@@ -139,7 +147,7 @@
 <h1 id="mod-creation-instructions">Mod Creation Instructions</h1>
 <h2 id="step-1-workspace-setup">Step 1: Workspace Setup</h2>
 <p>Replace your_mod_name with whatever you want to call your mod with no uppercase, and no spaces.</p>
-<p><img src="https://github.com/Jeyers-Development/flintforge-website/blob/main/wikisrc/setup.gif?raw=true" alt=""></p>
+<p><img src="https://github.com/Jeyers-Development/flintforge-website/blob/main/wikisrc/setup.gif?raw=true" alt="MOD SETUP GIF FILE, LOADING..."></p>
 <h2 id="step-2-mod-declaration-files">Step 2: Mod Declaration Files</h2>
 <p>The mod declaration files are the <em>‘title’, ‘authors’, ‘permanent’, and ‘version’</em> files. Without these, your mod will not import.</p>
 <ol>
@@ -211,7 +219,43 @@
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="step-4-build-mod">Step 4: Build Mod</h2>
-<p>Under the base workspace directory create a file with the name <em><strong>’<a href="http://build.py">build.py</a>’</strong></em></p>
+<h3 id="python-build-file-recommended">Python Build File (recommended)</h3>
+<p>Under the base workspace directory create a file with the name <em><strong>’<a href="http://build.py">build.py</a>’</strong></em> .</p>
+<p>Set the contents of this file to:</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">import</span> shutil
+<span class="token keyword">import</span> os
+
+source_dir <span class="token operator">=</span> os<span class="token punctuation">.</span>getcwd<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">if</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>exists<span class="token punctuation">(</span>source_dir <span class="token operator">+</span> <span class="token string">".zip"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+  os<span class="token punctuation">.</span>remove<span class="token punctuation">(</span>source_dir <span class="token operator">+</span> <span class="token string">".zip"</span><span class="token punctuation">)</span>
+shutil<span class="token punctuation">.</span>make_archive<span class="token punctuation">(</span>source_dir<span class="token punctuation">,</span> <span class="token string">'zip'</span><span class="token punctuation">,</span> source_dir<span class="token punctuation">)</span>
+<span class="token keyword">if</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>exists<span class="token punctuation">(</span>source_dir <span class="token operator">+</span> <span class="token string">".jop"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+  os<span class="token punctuation">.</span>remove<span class="token punctuation">(</span>source_dir <span class="token operator">+</span> <span class="token string">".jop"</span><span class="token punctuation">)</span>
+os<span class="token punctuation">.</span>rename<span class="token punctuation">(</span>source_dir <span class="token operator">+</span> <span class="token string">".zip"</span><span class="token punctuation">,</span> source_dir <span class="token operator">+</span> <span class="token string">".jop"</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Run the python build file to get the compressed .jop Flintforge mod!</p>
+<h3 id="manual-build-7zip">Manual Build (7zip)</h3>
+<p>Compress the contents of the folder to .zip and rename extension to .jop<br>
+<img src="https://github.com/Jeyers-Development/flintforge-website/blob/main/wikisrc/build.gif?raw=true" alt="BUILD-WITH-7ZIP GIF FILE, LOADING..."></p>
+<h1 id="mod-publishing">Mod Publishing</h1>
+<p><a href="https://flintforge.pnc3.net/mod/uploader.html">Mod DB Uploading Tool</a></p>
+<p>Access the Mod DB Uploading Tool to make a Mod DB user. Enter your desired username, then click the <em><strong>"Register New User"</strong></em> button. This will generate a command for you to copy under <em><strong>"CMD curl to register (or copy):"</strong></em> . Copy the command, open command prompt and paste it in.</p>
+<p>Should look something like this:</p>
+<pre><code>PS C:\Users\admin&gt; curl.exe -X POST "https://mod-uploader-worker.jakejem2010.workers.dev?action=register&amp;username=TestingUser"
+{"success":true,"username":"TestingUser","userKey":"e8e3fad27f2c27ace299fafc01ea7fb3ffa7d1ad0eaaacb90bc6aabf6dcd2268"}
+PS C:\Users\admin&gt;
+</code></pre>
+<p>Copy the <em><strong>"userKey"</strong></em> (dont include quotes, ex: e8e3fad27f2c27ace299fafc01ea7fb3ffa7d1ad0eaaacb90bc6aabf6dcd2268).</p>
+<p>Go back to the Mod DB Uploading Tool and paste in the use key along with your username and click <em><strong>"Next"</strong></em></p>
+<p>FILL IN ALL INFORMATION AND PASTE THE COMMAND INTO COMMAND PROMPT LIKE BEFORE!!!</p>
+<p>Check if mod shows up, if it doesn’t then make sure you’ve followed all the steps correctly. If you still have problems contact support at <a href="mailto:support@pnc3.net">support@pnc3.net</a>.</p>
+<h1 id="support-flintforge">Support Flintforge</h1>
+<p><a href="https://jeyers-development.itch.io/flintforge-support">Buy the Flinforge Support Package on Itch.io</a> ($2.00+)<br>
+<a href="https://modrinth.com/user/TeamJEM">Download My Modrinth Minecraft Mods</a> (FREE)<br>
+Join the <a href="https://discord.gg/zPEqgP9hgU">Discord - This link gives you ‘Modder Role’</a> and tell your friends! (FREE)</p>
+<h1 id="help">Help?</h1>
+<p>Contact support at <a href="mailto:support@pnc3.net">support@pnc3.net</a>.</p>
 
     </div>
   </div>
